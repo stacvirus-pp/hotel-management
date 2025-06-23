@@ -1,4 +1,6 @@
 package com.stac.hotelManagement.infrastruture
 
-class controller {
+data class controller(
+  private val id: Long
+) {
 }
