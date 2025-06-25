@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/")
-class HotelController {
+class HotelManagementController {
   @GetMapping("")
   fun getAppRoot(): String {
     return "Hotel management REST API..."

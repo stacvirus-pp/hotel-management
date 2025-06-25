@@ -6,9 +6,7 @@ import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Import
 
 @SpringBootApplication
-@Import({
-	HotelDomainConfig.java.class
-})
+@Import(HotelDomainConfig::class)
 class HotelManagementApplication
 
 fun main(args: Array<String>) {

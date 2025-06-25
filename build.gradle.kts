@@ -25,6 +25,12 @@ dependencies {
 	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+
+	implementation("org.springframework.boot:spring-boot-starter-actuator:3.5.3")
+
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.19.1")
+	implementation("org.postgresql:r2dbc-postgresql:1.0.7.RELEASE")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.projectreactor:reactor-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
