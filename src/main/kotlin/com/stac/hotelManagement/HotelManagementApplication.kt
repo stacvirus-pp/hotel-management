@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Import
 
 @SpringBootApplication
 @Import(HotelDomainConfig::class)
+//@Import(value = [HotelDomainConfig::class, AnotherConfig::class])
 class HotelManagementApplication
 
 fun main(args: Array<String>) {

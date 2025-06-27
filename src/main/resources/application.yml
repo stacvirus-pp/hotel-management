@@ -6,6 +6,12 @@ spring:
   application:
     name: hotelManagement
   r2dbc:
-    url: r2dbc:postgresql://localhost:5432/spring
+    url: r2dbc:postgresql://localhost:5001/hotel
     username: hotel
-    password: hotel
+    password: password
+
+
+logging:
+  level:
+    io.r2dbc.postgresql.QUERY: DEBUG
+    org.springframework.r2dbc.core: DEBUG
