@@ -7,6 +7,8 @@ CREATE TABLE hotel
     name        TEXT NOT NULL,
     location    FLOAT8[] NOT NULL,
     description TEXT NOT NULL,
-    amenities   TEXT[] NOT NULL,
-    images      TEXT[] NOT NULL
+    amenities   UUID[],
+    images      TEXT[] NOT NULL,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
 );

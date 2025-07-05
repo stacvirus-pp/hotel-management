@@ -14,9 +14,12 @@ class R2dbcInitConfig {
   fun initializer(connectionFactory: ConnectionFactory): ConnectionFactoryInitializer {
     val initializer = ConnectionFactoryInitializer()
     initializer.setConnectionFactory(connectionFactory)
-    initializer.setDatabasePopulator(
-      ResourceDatabasePopulator(ClassPathResource("hotel.sql"))
+
+    val popular = ResourceDatabasePopulator(
+      ClassPathResource("hotel.sql"),
+      ClassPathResource("amenity.sql")
     )
+    initializer.setDatabasePopulator(popular)
     return initializer
   }
 }
