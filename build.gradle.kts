@@ -31,6 +31,11 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.19.1")
 	implementation("org.postgresql:r2dbc-postgresql:1.0.7.RELEASE")
 
+	testImplementation("io.github.serpro69:kotlin-faker:1.15.0")
+	testImplementation("io.mockk:mockk:1.13.10")
+	testImplementation("org.junit.jupiter:junit-jupiter-api")
+	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.projectreactor:reactor-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
