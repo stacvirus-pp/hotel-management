@@ -1,5 +1,7 @@
 package com.stac.hotelManagement.domain.hotel.core.model
 
+import java.util.UUID
+
 data class AddHotelCommand(
   val name: String,
   val description: String,
