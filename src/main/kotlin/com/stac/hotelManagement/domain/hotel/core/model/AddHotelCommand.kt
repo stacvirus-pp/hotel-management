@@ -8,7 +8,7 @@ data class AddHotelCommand(
   val name: String,
   val description: String,
   val location: List<Double>,
-  val amenities: MutableList<UUID>? = null,
+  val amenities: List<UUID> = emptyList(),
   val images: List<String>,
 ){
   fun toHotel(): Hotel {
@@ -16,7 +16,7 @@ data class AddHotelCommand(
       name = name,
       description = description,
       location = location,
-      amenities = amenities,
+      amenities = amenities.toMutableList(),
       images = images,
       createdAt = Utils.dateToString(OffsetDateTime.now()),
       updatedAt = Utils.dateToString(OffsetDateTime.now())

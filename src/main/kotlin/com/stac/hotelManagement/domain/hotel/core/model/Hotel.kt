@@ -3,6 +3,7 @@ package com.stac.hotelManagement.domain.hotel.core.model
 import com.stac.hotelManagement.infrastruture.util.Utils
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
+import java.time.OffsetDateTime
 import java.util.*
 
 @Table("hotel")
@@ -13,7 +14,7 @@ data class Hotel(
   val name: String,
   val location: List<Double>,
   val description: String,
-  val amenities: MutableList<UUID>? = null,
+  val amenities: MutableList<UUID>,
   val images: List<String>,
   val createdAt: String,
   val updatedAt: String
@@ -28,6 +29,16 @@ data class Hotel(
       images = images,
       createdAt = Utils.stringToDate(createdAt),
       updatedAt = Utils.stringToDate(updatedAt)
+    )
+  }
+
+  fun addAmenity(amenity: UUID): Hotel{
+    val updatedAmenities = (this.amenities + amenity)
+      .distinct()
+      .toMutableList()
+    return this.copy(
+      amenities = updatedAmenities,
+      updatedAt = Utils.dateToString(OffsetDateTime.now())
     )
   }
 }
