@@ -41,4 +41,17 @@ data class Hotel(
       updatedAt = Utils.dateToString(OffsetDateTime.now())
     )
   }
+
+  fun updateName(newName: String): Hotel {
+    return this.copy(name = newName, updatedAt = Utils.dateToString(OffsetDateTime.now()))
+  }
+
+  fun updateDescription(description: String): Hotel {
+    return this.copy(description = description, updatedAt = Utils.dateToString(OffsetDateTime.now()))
+  }
+
+  fun updateImages(newImages: List<String>): Hotel {
+    val combined = (this.images + newImages).takeLast(6)
+    return this.copy(images = combined, updatedAt = Utils.dateToString(OffsetDateTime.now()))
+  }
 }

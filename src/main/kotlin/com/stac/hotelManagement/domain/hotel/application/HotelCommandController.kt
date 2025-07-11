@@ -2,6 +2,7 @@ package com.stac.hotelManagement.domain.hotel.application
 
 import com.stac.hotelManagement.domain.hotel.core.model.AddHotelCommand
 import com.stac.hotelManagement.domain.hotel.core.model.HotelDto
+import com.stac.hotelManagement.domain.hotel.core.model.UpdateHotelCommand
 import com.stac.hotelManagement.domain.hotel.core.ports.incoming.ManageHotel
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
@@ -34,7 +35,12 @@ class HotelCommandController(
   }
 
   @PutMapping("{hotelId}/add-amenity/{amenityId}")
-  fun addAmenity(@PathVariable hotelId: UUID, @PathVariable amenityId: UUID): Mono<HotelDto>{
+  fun addAmenity(@PathVariable hotelId: UUID, @PathVariable amenityId: UUID): Mono<HotelDto> {
     return manageHotel.addAmenity(hotelId, amenityId)
+  }
+
+  @PutMapping("{hotelId}/update")
+  fun updateHotel(@RequestBody updateHotelCommand: UpdateHotelCommand, @PathVariable hotelId: UUID): Mono<HotelDto> {
+    return manageHotel.updateHotel(updateHotelCommand, hotelId)
   }
 }

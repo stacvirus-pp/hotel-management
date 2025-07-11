@@ -34,4 +34,12 @@ class HotelCommandControllerTest {
       .expectBody()
       .jsonPath("$").isArray
   }
+
+  @Test
+  fun`add an amenity to a hotel`(){
+    client.put()
+      .uri("/api/v1/hotels/1/add-amenity/2")
+      .exchange()
+      .expectStatus().isOk
+  }
 }

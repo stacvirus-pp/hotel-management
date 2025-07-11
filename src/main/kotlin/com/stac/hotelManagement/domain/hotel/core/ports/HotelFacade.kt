@@ -2,6 +2,7 @@ package com.stac.hotelManagement.domain.hotel.core.ports
 
 import com.stac.hotelManagement.domain.hotel.core.model.AddHotelCommand
 import com.stac.hotelManagement.domain.hotel.core.model.HotelDto
+import com.stac.hotelManagement.domain.hotel.core.model.UpdateHotelCommand
 import com.stac.hotelManagement.domain.hotel.core.ports.incoming.ManageHotel
 import com.stac.hotelManagement.domain.hotel.core.ports.outgoing.HotelDatabase
 import com.stac.hotelManagement.infrastruture.common.models.enums.EntityType
@@ -50,4 +51,25 @@ class HotelFacade(
           .map { it.toDto() }
       }
   }
+
+  override fun updateHotel(updateHotelCommand: UpdateHotelCommand, hotelId: UUID): Mono<HotelDto> {
+    return database.findById(hotelId)
+      .flatMap { hotel ->
+        var updatedHotel = hotel
+        if (updateHotelCommand.name != "UNCHANGED") {
+          updatedHotel = updatedHotel.updateName(updateHotelCommand.name)
+        }
+
+        if (updateHotelCommand.description != "UNCHANGED") {
+          updatedHotel = updatedHotel.updateDescription(updateHotelCommand.description)
+        }
+
+        if (updateHotelCommand.images != listOf("UNCHANGED")) {
+          updatedHotel = updatedHotel.updateImages(updateHotelCommand.images)
+        }
+
+        database.save(updatedHotel).map { it.toDto() }
+      }
+  }
+
 }
