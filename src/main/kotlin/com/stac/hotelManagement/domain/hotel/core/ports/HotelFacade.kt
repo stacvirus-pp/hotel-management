@@ -49,6 +49,8 @@ class HotelFacade(
             database.save(hotel.addAmenity(amenityId))
           }
           .map { it.toDto() }
+          .doOnSuccess { log.info("Adding amenity successful: {}", it)}
+          .doOnError { err -> log.error("Adding amenity to hotel failed: {}", err.message, err) }
       }
   }
 
@@ -70,6 +72,14 @@ class HotelFacade(
 
         database.save(updatedHotel).map { it.toDto() }
       }
+  }
+
+  override fun getHotelById(id: UUID): Mono<HotelDto> {
+    return database.getHotelById(id)
+      .map { it.toDto() }
+//      .switchIfEmpty(ResponseStatusException(HttpStatus.NOT_FOUND, "hotel not found."))
+      .doOnSuccess { log.info("Get hotel by id {} successful {}", id, it)}
+      .doOnError { err -> log.error("Get hotel by id failed: {}", err.message, err) }
   }
 
 }

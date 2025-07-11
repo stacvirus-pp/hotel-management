@@ -1,5 +1,6 @@
 package com.stac.hotelManagement.domain.hotel.application
 
+import com.stac.hotelManagement.domain.hotel.core.model.UpdateHotelCommand
 import com.stac.hotelManagement.util.FakerUtils.fakeAddHotelCommand
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -38,7 +39,26 @@ class HotelCommandControllerTest {
   @Test
   fun`add an amenity to a hotel`(){
     client.put()
-      .uri("/api/v1/hotels/1/add-amenity/2")
+      .uri("/api/v1/hotels/f748e142/add-amenity/f748e142")
+      .exchange()
+      .expectStatus().isOk
+  }
+
+  @Test
+  fun`get hotel by id`(){
+    client.get()
+      .uri("/api/v1/hotels/f748e142-6e77-467b-9904-a2bd9067b953")
+      .exchange()
+      .expectStatus().isOk
+  }
+
+  @Test
+  fun`update hotel successfully`(){
+    val command = UpdateHotelCommand(name = "test hotel")
+
+    client.put()
+      .uri("/api/v1/hotels/f748e142-6e77-467b-9904-a2bd9067b953/update")
+      .bodyValue(command)
       .exchange()
       .expectStatus().isOk
   }

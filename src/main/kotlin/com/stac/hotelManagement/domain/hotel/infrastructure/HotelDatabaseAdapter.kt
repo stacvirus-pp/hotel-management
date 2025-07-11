@@ -20,4 +20,8 @@ class HotelDatabaseAdapter(
   override fun findAll(): Flux<Hotel> {
     return hotelRepository.findAll()
   }
+
+  override fun getHotelById(id: UUID): Mono<Hotel> {
+    return hotelRepository.findById(id)
+  }
 }

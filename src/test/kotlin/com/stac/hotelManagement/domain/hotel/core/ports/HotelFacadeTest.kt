@@ -119,4 +119,26 @@ class HotelFacadeTest {
       .expectNextMatches { it.name == findHotel.name && it.description == findHotel.description }
       .verifyComplete()
   }
+
+  @Test
+  fun `should retrieve the hotel having the corresponding id`() {
+    val hotelId = UUID.randomUUID()
+    val hotel = fakeHotel().copy(id = hotelId)
+
+    every { database.getHotelById(hotelId) } returns Mono.just(hotel)
+
+    StepVerifier.create(facade.getHotelById(hotelId))
+      .expectNextMatches { it.name == hotel.name }
+      .verifyComplete()
+  }
+
+  @Test
+  fun `get hotel id should yield and error`() {
+    val hotelId = UUID.randomUUID()
+
+    every { database.getHotelById(hotelId) } returns Mono.error(IllegalArgumentException("an error occurred"))
+
+    StepVerifier.create(facade.getHotelById(hotelId))
+      .expectError()
+  }
 }

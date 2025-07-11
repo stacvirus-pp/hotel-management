@@ -34,6 +34,11 @@ class HotelCommandController(
     return manageHotel.getHotels()
   }
 
+  @GetMapping("/{hotelId}")
+  fun getHotelById(@PathVariable hotelId: UUID): Mono<HotelDto> {
+    return manageHotel.getHotelById(hotelId)
+  }
+
   @PutMapping("{hotelId}/add-amenity/{amenityId}")
   fun addAmenity(@PathVariable hotelId: UUID, @PathVariable amenityId: UUID): Mono<HotelDto> {
     return manageHotel.addAmenity(hotelId, amenityId)

@@ -12,4 +12,5 @@ interface ManageHotel {
   fun getHotels(): Flux<HotelDto>
   fun addAmenity(hotelId: UUID, amenityId: UUID): Mono<HotelDto>
   fun updateHotel(updateHotelCommand: UpdateHotelCommand, hotelId: UUID): Mono<HotelDto>
+  fun getHotelById(id: UUID): Mono<HotelDto>
 }
