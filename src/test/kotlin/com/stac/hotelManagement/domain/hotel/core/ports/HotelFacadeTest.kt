@@ -1,5 +1,6 @@
 package com.stac.hotelManagement.domain.hotel.core.ports
 
+import com.stac.hotelManagement.domain.hotel.core.model.UpdateHotelCommand
 import com.stac.hotelManagement.domain.hotel.core.ports.outgoing.HotelDatabase
 import com.stac.hotelManagement.infrastruture.common.models.enums.EntityType
 import com.stac.hotelManagement.infrastruture.common.services.checkEntityExistence.AmenityChecker
@@ -80,5 +81,42 @@ class HotelFacadeTest {
     StepVerifier.create(facade.addAmenity(hotelId, amenityId))
       .expectErrorMatches { it is ResponseStatusException && it.statusCode == HttpStatus.NOT_FOUND }
       .verify()
+  }
+
+  @Test
+  fun`update all hotel fields`(){
+    val hotelId = UUID.randomUUID()
+    val updateHotelCommand = UpdateHotelCommand(
+      name = "updated test hotel name",
+      description = "updated test hotel description",
+      images = listOf("https://test-hotel-imate.png")
+    )
+    val findHotel = fakeHotel().copy(id = hotelId, amenities = mutableListOf())
+    val updatedHotel = findHotel.copy(
+      name = "updated test hotel name",
+      description = "updated test hotel description",
+      images = listOf("https://test-hotel-imate.png")
+    )
+
+    every { database.findById(hotelId) } returns Mono.just(findHotel)
+    every { database.save(any()) } returns Mono.just(updatedHotel)
+
+    StepVerifier.create(facade.updateHotel(updateHotelCommand, hotelId))
+      .expectNextMatches { it.name == "updated test hotel name" && it.description == "updated test hotel description" }
+      .verifyComplete()
+  }
+
+  @Test
+  fun`update hotel is identical when all fields are unchanged`(){
+    val hotelId = UUID.randomUUID()
+    val updateHotelCommand = UpdateHotelCommand()
+    val findHotel = fakeHotel().copy(id = hotelId, amenities = mutableListOf())
+
+    every { database.findById(hotelId) } returns Mono.just(findHotel)
+    every { database.save(any()) } returns Mono.just(findHotel)
+
+    StepVerifier.create(facade.updateHotel(updateHotelCommand, hotelId))
+      .expectNextMatches { it.name == findHotel.name && it.description == findHotel.description }
+      .verifyComplete()
   }
 }
