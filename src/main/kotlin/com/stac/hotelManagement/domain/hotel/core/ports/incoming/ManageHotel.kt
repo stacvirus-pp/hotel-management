@@ -13,4 +13,5 @@ interface ManageHotel {
   fun addAmenity(hotelId: UUID, amenityId: UUID): Mono<HotelDto>
   fun updateHotel(updateHotelCommand: UpdateHotelCommand, hotelId: UUID): Mono<HotelDto>
   fun getHotelById(id: UUID): Mono<HotelDto>
+  fun deleteHotelById(id: UUID): Mono<Unit>
 }

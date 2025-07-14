@@ -24,4 +24,9 @@ class HotelDatabaseAdapter(
   override fun getHotelById(id: UUID): Mono<Hotel> {
     return hotelRepository.findById(id)
   }
+
+  override fun deleteById(id: UUID): Mono<Unit> {
+    return hotelRepository.deleteById(id)
+      .thenReturn(Unit)
+  }
 }

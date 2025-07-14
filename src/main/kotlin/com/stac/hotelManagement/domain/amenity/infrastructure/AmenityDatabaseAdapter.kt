@@ -4,6 +4,7 @@ import com.stac.hotelManagement.domain.amenity.core.model.Amenity
 import com.stac.hotelManagement.domain.amenity.core.ports.outgoing.AmenityDatabase
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import java.util.UUID
 
 class AmenityDatabaseAdapter(
   private val amenityRepository: AmenityRepository
@@ -14,5 +15,9 @@ class AmenityDatabaseAdapter(
 
   override fun findAll(): Flux<Amenity> {
     return amenityRepository.findAll()
+  }
+
+  override fun getAmenityById(id: UUID): Mono<Amenity> {
+    return amenityRepository.findById(id)
   }
 }

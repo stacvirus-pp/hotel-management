@@ -7,6 +7,7 @@ import com.stac.hotelManagement.domain.hotel.core.ports.incoming.ManageHotel
 import com.stac.hotelManagement.domain.hotel.core.ports.outgoing.HotelDatabase
 import com.stac.hotelManagement.infrastruture.common.models.enums.EntityType
 import com.stac.hotelManagement.infrastruture.common.services.checkEntityExistence.EntityExistenceCheckerFactory
+import com.stac.hotelManagement.infrastruture.exceptions.EntityNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
@@ -77,9 +78,16 @@ class HotelFacade(
   override fun getHotelById(id: UUID): Mono<HotelDto> {
     return database.getHotelById(id)
       .map { it.toDto() }
-//      .switchIfEmpty(ResponseStatusException(HttpStatus.NOT_FOUND, "hotel not found."))
+      .switchIfEmpty(
+        Mono.error(
+          EntityNotFoundException("Hotel not found with id: $id.")
+        )
+      )
       .doOnSuccess { log.info("Get hotel by id {} successful {}", id, it)}
       .doOnError { err -> log.error("Get hotel by id failed: {}", err.message, err) }
   }
 
+  override fun deleteHotelById(id: UUID): Mono<Unit> {
+    return database.deleteById(id)
+  }
 }

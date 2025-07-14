@@ -5,6 +5,7 @@ import com.stac.hotelManagement.domain.hotel.core.model.HotelDto
 import com.stac.hotelManagement.domain.hotel.core.model.UpdateHotelCommand
 import com.stac.hotelManagement.domain.hotel.core.ports.incoming.ManageHotel
 import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -23,7 +24,7 @@ class HotelCommandController(
   private val manageHotel: ManageHotel
 ) {
 
-  @PostMapping("")
+  @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   fun createHotel (@RequestBody addHotelCommand: AddHotelCommand): Mono<HotelDto> {
     return manageHotel.handle(addHotelCommand)
@@ -47,5 +48,11 @@ class HotelCommandController(
   @PutMapping("{hotelId}/update")
   fun updateHotel(@RequestBody updateHotelCommand: UpdateHotelCommand, @PathVariable hotelId: UUID): Mono<HotelDto> {
     return manageHotel.updateHotel(updateHotelCommand, hotelId)
+  }
+
+  @DeleteMapping("/{hotelId}/delete")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  fun deleteHotelById(@PathVariable hotelId: UUID): Mono<Unit> {
+    return manageHotel.deleteHotelById(hotelId)
   }
 }
