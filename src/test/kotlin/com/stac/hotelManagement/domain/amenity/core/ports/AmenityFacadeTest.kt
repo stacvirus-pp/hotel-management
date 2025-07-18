@@ -44,4 +44,16 @@ class AmenityFacadeTest {
       .expectNextSequence(amenityDtos)
       .verifyComplete()
   }
+
+  @Test
+  fun `should retrieve the hotel having the corresponding id`() {
+    val amenityId = UUID.randomUUID()
+    val amenity = fakeAmenity().copy(id = amenityId)
+
+    every { amenityDatabase.getAmenityById(amenityId) } returns Mono.just(amenity)
+
+    StepVerifier.create(facade.getAmenityById(amenityId))
+      .expectNextMatches { it.name == amenity.name }
+      .verifyComplete()
+  }
 }

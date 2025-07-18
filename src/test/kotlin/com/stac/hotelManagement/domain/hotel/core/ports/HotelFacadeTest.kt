@@ -141,4 +141,14 @@ class HotelFacadeTest {
     StepVerifier.create(facade.getHotelById(hotelId))
       .expectError()
   }
+
+  @Test
+  fun `should delete a hotel successfully`(){
+    val hotelId = UUID.randomUUID()
+
+    every { database.deleteById(hotelId) } returns Mono.empty()
+
+    StepVerifier.create(facade.deleteHotelById(hotelId))
+      .verifyComplete()
+  }
 }

@@ -36,4 +36,15 @@ class AmenityCommandControllerTest {
       .expectBody()
       .jsonPath("$").isArray
   }
+
+  @Test
+  fun`get amenities should yield not found error response`() {
+    val id = "f748e142-6e77-467b-9904-a2bd9067b953"
+    client.get()
+      .uri("/api/v1/hotels/amenities/$id")
+      .exchange()
+      .expectStatus().isNotFound
+      .expectBody()
+      .jsonPath("$.message").isEqualTo("Amenity not found with id: $id.")
+  }
 }

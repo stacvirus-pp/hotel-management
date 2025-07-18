@@ -9,8 +9,6 @@ import com.stac.hotelManagement.infrastruture.common.models.enums.EntityType
 import com.stac.hotelManagement.infrastruture.common.services.checkEntityExistence.EntityExistenceCheckerFactory
 import com.stac.hotelManagement.infrastruture.exceptions.EntityNotFoundException
 import org.slf4j.LoggerFactory
-import org.springframework.http.HttpStatus
-import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import java.util.UUID
@@ -43,7 +41,7 @@ class HotelFacade(
     return checker.exists(amenityId)
       .flatMap { exists ->
         if (!exists) {
-          return@flatMap Mono.error(ResponseStatusException(HttpStatus.NOT_FOUND, "Amenity was not found."))
+          return@flatMap Mono.error(EntityNotFoundException("Amenity was not found using id: $amenityId."))
         }
         database.findById(hotelId)
           .flatMap { hotel ->
