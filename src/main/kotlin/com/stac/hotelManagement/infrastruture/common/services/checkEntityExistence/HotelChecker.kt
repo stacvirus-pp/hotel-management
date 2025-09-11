@@ -1,6 +1,6 @@
 package com.stac.hotelManagement.infrastruture.common.services.checkEntityExistence
 
-import com.stac.hotelManagement.domain.hotel.infrastructure.HotelRepository
+import com.stac.hotelManagement.domain.hotel.infrastructure.database.HotelRepository
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 import java.util.UUID

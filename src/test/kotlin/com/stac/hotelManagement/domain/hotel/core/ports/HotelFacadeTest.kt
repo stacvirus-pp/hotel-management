@@ -2,6 +2,7 @@ package com.stac.hotelManagement.domain.hotel.core.ports
 
 import com.stac.hotelManagement.domain.hotel.core.model.UpdateHotelCommand
 import com.stac.hotelManagement.domain.hotel.core.ports.outgoing.HotelDatabase
+import com.stac.hotelManagement.domain.hotel.infrastructure.client.UploadFileClient
 import com.stac.hotelManagement.infrastruture.common.models.enums.EntityType
 import com.stac.hotelManagement.infrastruture.common.services.checkEntityExistence.AmenityChecker
 import com.stac.hotelManagement.infrastruture.common.services.checkEntityExistence.EntityExistenceCheckerFactory
@@ -22,7 +23,8 @@ class HotelFacadeTest {
 
   private val database = mockk<HotelDatabase>()
   private val existenceCheckerFactory = mockk<EntityExistenceCheckerFactory>()
-  private val facade = HotelFacade(database, existenceCheckerFactory)
+  private val uploadFileClient = mockk<UploadFileClient>()
+  private val facade = HotelFacade(database, existenceCheckerFactory, uploadFileClient)
 
   private val amenityChecker = mockk<AmenityChecker>()
 
@@ -35,7 +37,7 @@ class HotelFacadeTest {
 
     every { database.save(any()) } returns Mono.just(savedHotel)
 
-    StepVerifier.create(facade.handle(command))
+    StepVerifier.create(facade.addHotel(command))
       .expectNextMatches { it.name == expectedDto.name }
       .verifyComplete()
   }

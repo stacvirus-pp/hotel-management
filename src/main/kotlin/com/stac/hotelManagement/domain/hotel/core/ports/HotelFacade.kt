@@ -5,22 +5,25 @@ import com.stac.hotelManagement.domain.hotel.core.model.HotelDto
 import com.stac.hotelManagement.domain.hotel.core.model.UpdateHotelCommand
 import com.stac.hotelManagement.domain.hotel.core.ports.incoming.ManageHotel
 import com.stac.hotelManagement.domain.hotel.core.ports.outgoing.HotelDatabase
+import com.stac.hotelManagement.domain.hotel.infrastructure.client.UploadFileClient
 import com.stac.hotelManagement.infrastruture.common.models.enums.EntityType
 import com.stac.hotelManagement.infrastruture.common.services.checkEntityExistence.EntityExistenceCheckerFactory
 import com.stac.hotelManagement.infrastruture.exceptions.EntityNotFoundException
 import org.slf4j.LoggerFactory
+import org.springframework.http.codec.multipart.FilePart
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import java.util.UUID
 
 class HotelFacade(
   private val database: HotelDatabase,
-  private val existenceCheckerFactory: EntityExistenceCheckerFactory
+  private val existenceCheckerFactory: EntityExistenceCheckerFactory,
+  private val uploadFileClient: UploadFileClient
 ): ManageHotel {
 
   private val log = LoggerFactory.getLogger(this::class.java)
 
-  override fun handle(addHotelCommand: AddHotelCommand): Mono<HotelDto> {
+  override fun addHotel(addHotelCommand: AddHotelCommand): Mono<HotelDto> {
     log.info("inserting new hotel using facade class: {}", addHotelCommand)
     val hotel = addHotelCommand.toHotel()
     return database.save(hotel)
@@ -55,6 +58,9 @@ class HotelFacade(
 
   override fun updateHotel(updateHotelCommand: UpdateHotelCommand, hotelId: UUID): Mono<HotelDto> {
     return database.findById(hotelId)
+      .switchIfEmpty(Mono.error(
+        EntityNotFoundException("Hotel not found with id: $hotelId.")
+      ))
       .flatMap { hotel ->
         var updatedHotel = hotel
         if (updateHotelCommand.name != "UNCHANGED") {
@@ -71,6 +77,8 @@ class HotelFacade(
 
         database.save(updatedHotel).map { it.toDto() }
       }
+      .doOnSuccess { log.info("Update hotel by id {} successful", hotelId)}
+      .doOnError { err -> log.error("Update hotel by id failed: {}", err.message, err) }
   }
 
   override fun getHotelById(id: UUID): Mono<HotelDto> {
@@ -87,5 +95,18 @@ class HotelFacade(
 
   override fun deleteHotelById(id: UUID): Mono<Unit> {
     return database.deleteById(id)
+  }
+
+  override fun addImages(files: List<FilePart>, id: UUID): Mono<HotelDto> {
+    if (files.isEmpty()) {
+      return Mono.error(IllegalArgumentException("Files list cannot be empty"))
+    }
+    return uploadFileClient.uploadFiles(files)
+      .flatMap { imageLinks ->
+        val command = UpdateHotelCommand(images = imageLinks)
+        updateHotel(command, id)
+      }
+      .doOnSuccess { log.info("Add images to hotel id {} successful {}", id, it)}
+      .doOnError { err -> log.error("Add images to hotel failed: {}", err.message, err) }
   }
 }

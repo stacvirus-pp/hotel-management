@@ -1,4 +1,4 @@
-package com.stac.hotelManagement.domain.hotel.infrastructure
+package com.stac.hotelManagement.domain.hotel.infrastructure.database
 
 import com.stac.hotelManagement.domain.hotel.core.model.Hotel
 import org.springframework.data.repository.reactive.ReactiveCrudRepository

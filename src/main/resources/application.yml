@@ -5,10 +5,20 @@ spring:
     active: default
   application:
     name: hotelManagement
+  output:
+    ansi:
+      enabled: ALWAYS
   r2dbc:
     url: r2dbc:postgresql://localhost:5001/hotel
     username: hotel
     password: password
+api:
+  minio:
+    scheme: ${MINIO_SCHEME:http}
+    host: ${MINIO_HOST:localhost}
+    base: ${MINIO_BASE:api/v1/documents}
+    path: ${MINIO_PATH:batch/upload}
+    port: ${MINIO_PORT:9900}
 
 
 logging:
