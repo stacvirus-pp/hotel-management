@@ -1,6 +1,7 @@
 package com.stac.hotelManagement.domain.hotel.infrastructure.client
 
 import com.fasterxml.jackson.databind.JsonNode
+import com.stac.hotelManagement.domain.hotel.core.ports.outgoing.UploadFileClient
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.buffer.DataBuffer

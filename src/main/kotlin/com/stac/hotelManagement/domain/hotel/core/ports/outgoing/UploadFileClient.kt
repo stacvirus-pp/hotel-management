@@ -1,4 +1,4 @@
-package com.stac.hotelManagement.domain.hotel.infrastructure.client
+package com.stac.hotelManagement.domain.hotel.core.ports.outgoing
 
 import org.springframework.http.codec.multipart.FilePart
 import reactor.core.publisher.Mono

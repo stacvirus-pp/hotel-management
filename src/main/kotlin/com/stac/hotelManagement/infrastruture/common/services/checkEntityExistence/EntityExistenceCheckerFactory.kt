@@ -1,5 +1,6 @@
 package com.stac.hotelManagement.infrastruture.common.services.checkEntityExistence
 
+import com.stac.hotelManagement.domain.hotel.core.ports.outgoing.EntityChecker
 import com.stac.hotelManagement.infrastruture.common.models.enums.EntityType
 import org.springframework.stereotype.Component
 
@@ -7,9 +8,9 @@ import org.springframework.stereotype.Component
 class EntityExistenceCheckerFactory(
   private val hotelChecker: HotelChecker,
   private val amenityChecker: AmenityChecker
-) {
+): EntityChecker {
 
-  fun checker(entityType: String): EntityExistenceChecker{
+  override fun checker(entityType: String): EntityExistenceChecker{
     return when(entityType.uppercase()){
       EntityType.HOTEL.name -> hotelChecker
       EntityType.AMENITY.name -> amenityChecker

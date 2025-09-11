@@ -4,10 +4,10 @@ import com.stac.hotelManagement.domain.hotel.core.model.AddHotelCommand
 import com.stac.hotelManagement.domain.hotel.core.model.HotelDto
 import com.stac.hotelManagement.domain.hotel.core.model.UpdateHotelCommand
 import com.stac.hotelManagement.domain.hotel.core.ports.incoming.ManageHotel
+import com.stac.hotelManagement.domain.hotel.core.ports.outgoing.EntityChecker
 import com.stac.hotelManagement.domain.hotel.core.ports.outgoing.HotelDatabase
-import com.stac.hotelManagement.domain.hotel.infrastructure.client.UploadFileClient
+import com.stac.hotelManagement.domain.hotel.core.ports.outgoing.UploadFileClient
 import com.stac.hotelManagement.infrastruture.common.models.enums.EntityType
-import com.stac.hotelManagement.infrastruture.common.services.checkEntityExistence.EntityExistenceCheckerFactory
 import com.stac.hotelManagement.infrastruture.exceptions.EntityNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.http.codec.multipart.FilePart
@@ -17,7 +17,7 @@ import java.util.UUID
 
 class HotelFacade(
   private val database: HotelDatabase,
-  private val existenceCheckerFactory: EntityExistenceCheckerFactory,
+  private val entityChecker: EntityChecker,
   private val uploadFileClient: UploadFileClient
 ): ManageHotel {
 
@@ -40,7 +40,7 @@ class HotelFacade(
   }
 
   override fun addAmenity(hotelId: UUID, amenityId: UUID): Mono<HotelDto> {
-    val checker = existenceCheckerFactory.checker(EntityType.AMENITY.name)
+    val checker = entityChecker.checker(EntityType.AMENITY.name)
     return checker.exists(amenityId)
       .flatMap { exists ->
         if (!exists) {

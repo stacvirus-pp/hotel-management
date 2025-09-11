@@ -2,7 +2,7 @@ package com.stac.hotelManagement.domain.hotel.core.ports
 
 import com.stac.hotelManagement.domain.hotel.core.model.UpdateHotelCommand
 import com.stac.hotelManagement.domain.hotel.core.ports.outgoing.HotelDatabase
-import com.stac.hotelManagement.domain.hotel.infrastructure.client.UploadFileClient
+import com.stac.hotelManagement.domain.hotel.core.ports.outgoing.UploadFileClient
 import com.stac.hotelManagement.infrastruture.common.models.enums.EntityType
 import com.stac.hotelManagement.infrastruture.common.services.checkEntityExistence.AmenityChecker
 import com.stac.hotelManagement.infrastruture.common.services.checkEntityExistence.EntityExistenceCheckerFactory
