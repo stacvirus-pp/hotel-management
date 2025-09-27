@@ -17,6 +17,10 @@ class AmenityDatabaseAdapter(
     return amenityRepository.findAll()
   }
 
+  override fun findById(id: UUID): Mono<Amenity> {
+    return amenityRepository.findById(id)
+  }
+
   override fun getAmenityById(id: UUID): Mono<Amenity> {
     return amenityRepository.findById(id)
   }

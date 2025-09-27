@@ -17,7 +17,6 @@ api:
     scheme: ${MINIO_SCHEME:http}
     host: ${MINIO_HOST:localhost}
     base: ${MINIO_BASE:api/v1/documents}
-    path: ${MINIO_PATH:batch/upload}
     port: ${MINIO_PORT:9900}
 
 

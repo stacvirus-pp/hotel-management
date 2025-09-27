@@ -8,5 +8,6 @@ import java.util.UUID
 interface AmenityDatabase {
   fun save(amenity: Amenity): Mono<Amenity>
   fun findAll(): Flux<Amenity>
+  fun findById(id: UUID): Mono<Amenity>
   fun getAmenityById(id: UUID): Mono<Amenity>
 }

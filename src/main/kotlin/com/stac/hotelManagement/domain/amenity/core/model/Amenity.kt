@@ -3,6 +3,7 @@ package com.stac.hotelManagement.domain.amenity.core.model
 import com.stac.hotelManagement.infrastruture.util.Utils
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
+import java.time.OffsetDateTime
 import java.util.UUID
 
 @Table("amenity")
@@ -25,5 +26,17 @@ data class Amenity(
       createdAt = Utils.stringToDate(createdAt),
       updatedAt = Utils.stringToDate(updatedAt)
     )
+  }
+
+  fun updateName(newName: String): Amenity {
+    return this.copy(name = newName, updatedAt = Utils.dateToString(OffsetDateTime.now()))
+  }
+
+  fun updateDescription(description: String): Amenity {
+    return this.copy(description = description, updatedAt = Utils.dateToString(OffsetDateTime.now()))
+  }
+
+  fun updateIcon(newIcon: String): Amenity {
+    return this.copy(icon = newIcon, updatedAt = Utils.dateToString(OffsetDateTime.now()))
   }
 }

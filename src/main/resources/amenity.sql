@@ -1,7 +1,6 @@
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
-DROP TABLE IF EXISTS amenity;
 
-CREATE TABLE amenity (
+CREATE TABLE IF NOT EXISTS amenity (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name TEXT NOT NULL,
     description TEXT,

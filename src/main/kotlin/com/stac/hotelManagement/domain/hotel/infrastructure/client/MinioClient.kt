@@ -19,18 +19,20 @@ import reactor.core.publisher.Mono
 import reactor.util.retry.Retry
 import java.time.Duration
 
+
 @Component
-class MinioClient (
+class MinioClient(
   @Value("\${api.minio.scheme}") private val scheme: String,
   @Value("\${api.minio.host}") private val host: String,
-  @Value("\${api.minio.path}") private val path: String,
   @Value("\${api.minio.base}") private val base: String,
   @Value("\${api.minio.port}") private val port: Int,
   private val webClient: WebClient
-): UploadFileClient {
+) : UploadFileClient {
   private val log = LoggerFactory.getLogger(this::class.java)
+
   companion object {
     private const val FORM_FIELD_FILES = "files"
+    private const val FORM_FIELD_FILE = "file"
     private const val MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024L // 10MB
   }
 
@@ -73,7 +75,7 @@ class MinioClient (
               .scheme(scheme)
               .host(host)
               .port(port)
-              .path("$base/$path")
+              .path("$base/batch/upload")
               .build()
           }
           .contentType(MediaType.MULTIPART_FORM_DATA)
@@ -91,6 +93,40 @@ class MinioClient (
       }
   }
 
+  override fun uploadFile(file: FilePart): Mono<String> {
+    if (file == null) {
+      log.warn("⚠ No file provided for upload")
+      return Mono.error(IllegalArgumentException("File cannot be null"))
+    }
+    log.info("Starting uploading image of ${file.filename()}")
+
+    return validateFilePart(file)
+      .flatMap { contentType ->
+        val builder = MultipartBodyBuilder().apply {
+          asyncPart(FORM_FIELD_FILE, file.content(), DataBuffer::class.java)
+            .filename(file.filename())
+            .header("Content-Type", contentType)
+        }
+      webClient.post()
+        .uri { builder ->
+          builder
+            .scheme(scheme)
+            .host(host)
+            .port(port)
+            .path("$base/upload")
+            .build()
+        }
+        .contentType(MediaType.MULTIPART_FORM_DATA)
+        .body(BodyInserters.fromMultipartData(builder.build()))
+        .retrieve()
+        .onStatus({ it.isError }, handleErrorResponse("Minio client request failed"))
+        .bodyToMono<String>()
+        .timeout(Duration.ofSeconds(30))
+        .doOnSuccess { url -> log.info("Successfully uploaded file ${file.filename()}: $url") }
+        .doOnError { e -> log.error("❌ Upload failed for file ${file.filename()}: ${e.message}", e) }
+    }
+  }
+
   private fun handleErrorResponse(reason: String): (ClientResponse) -> Mono<Throwable> {
     return { response ->
       response.bodyToMono(JsonNode::class.java)
@@ -102,7 +138,7 @@ class MinioClient (
             body.has("message") -> body["message"]
             else -> "Unknown error"
           }
-          Mono.error(ResponseStatusException(response.statusCode(),"$reason: $message"))
+          Mono.error(ResponseStatusException(response.statusCode(), "$reason: $message"))
         }
     }
   }

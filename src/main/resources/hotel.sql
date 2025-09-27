@@ -1,7 +1,6 @@
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
-DROP TABLE IF EXISTS hotel;
 
-CREATE TABLE hotel
+CREATE TABLE IF NOT EXISTS hotel
 (
     id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name        TEXT NOT NULL,

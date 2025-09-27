@@ -5,4 +5,5 @@ import reactor.core.publisher.Mono
 
 interface UploadFileClient {
   fun uploadFiles(files: List<FilePart>): Mono<List<String>>
+  fun uploadFile(file: FilePart): Mono<String>
 }

@@ -4,6 +4,7 @@ import com.stac.hotelManagement.domain.amenity.core.ports.AmenityFacade
 import com.stac.hotelManagement.domain.amenity.core.ports.outgoing.AmenityDatabase
 import com.stac.hotelManagement.domain.amenity.infrastructure.AmenityDatabaseAdapter
 import com.stac.hotelManagement.domain.amenity.infrastructure.AmenityRepository
+import com.stac.hotelManagement.domain.hotel.infrastructure.client.MinioClient
 import org.springframework.context.annotation.Bean
 
 class AmenityDomainConfig {
@@ -16,5 +17,8 @@ class AmenityDomainConfig {
   }
 
   @Bean
-  fun createAmenity(amenityDatabase: AmenityDatabase) = AmenityFacade(amenityDatabase)
+  fun createAmenity(
+    amenityDatabase: AmenityDatabase,
+    minioClientImpl: MinioClient
+  ) = AmenityFacade(amenityDatabase, minioClientImpl)
 }
